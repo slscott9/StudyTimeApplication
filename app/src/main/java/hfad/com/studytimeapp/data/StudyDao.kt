@@ -1,4 +1,7 @@
 package hfad.com.studytimeapp.data
 
-class StudyDao {
+import androidx.room.Dao
+
+@Dao
+interface StudyDao {
 }

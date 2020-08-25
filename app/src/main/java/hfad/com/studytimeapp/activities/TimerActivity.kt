@@ -49,8 +49,11 @@ class TimerActivity : AppCompatActivity() {
         binding.addStudySessionChip.setOnClickListener {
             binding.startButton.text = "start"
             countdown_timer.cancel()
-            val hoursStudied = TimeUnit.MILLISECONDS.toHours(time_in_milli_seconds)
-            Toast.makeText(this, " The current hours studies on add click is $hoursStudied", Toast.LENGTH_LONG).show()
+            val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(time_in_milli_seconds)
+            val hoursStudied = (minutesStudied/60.0).toFloat()
+
+
+            Log.i("TimerActivity"," The current hours studied on add click is $hoursStudied")
         }
 
         binding.btnReset.setOnClickListener {
