@@ -24,25 +24,14 @@ class MainActivity : FragmentActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
 
-//        val monthViewModel = ViewModelProvider(this).get(MonthViewModel::class.java)
-//        val weekViewModel = ViewModelProvider(this).get(WeekViewModel::class.java)
 
         val viewmodel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewmodel.setAllSelectedMonthData(8)
 //
         val currentDayOfMonth = LocalDateTime.now().dayOfMonth
         val currentMonth = LocalDateTime.now().monthValue
 
-//        viewModel.setLastSevenStudySessionsData(currentMonth, currentDayOfMonth)
-//        viewModel.setAllSelectedMonthData(currentMonth)
-
-
-//        monthViewModel.setAllSessionsWithMatchingMonthData(currentMonth)
-//        weekViewModel.setLastSevenStudySessions(currentMonth, currentDayOfMonth)
-
-
-//        viewModel.setAllSelectedMonthData(currentMonth)
-//        viewModel.setLastSevenStudySessionsData(currentMonth, currentDayOfMonth)
-
+        viewmodel.setLastSevenStudySessionsData(currentMonth, currentDayOfMonth)
 
 
         binding.weekChip.setOnClickListener {
@@ -51,7 +40,6 @@ class MainActivity : FragmentActivity() {
                 addToBackStack(null)
             }
         }
-
 
 
         binding.monthChip.setOnClickListener {

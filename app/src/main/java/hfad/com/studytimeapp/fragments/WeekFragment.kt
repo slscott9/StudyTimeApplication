@@ -66,7 +66,7 @@ class WeekFragment : Fragment() {
 //        //barDataSet.setColors(ColorTemplate.COLORFUL_COLORS)
 //        barDataSet.color = resources.getColor(R.color.colorAccent)
 
-        binding.weekBarChart.animateY(5000)
+        binding.weekBarChart.animateY(2000)
     }
 
 

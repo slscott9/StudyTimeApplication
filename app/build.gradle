@@ -106,17 +106,14 @@ dependencies {
 
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 
-    // Annotation processor
-    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
-    // alternately - if using Java8, use the following instead of lifecycle-compiler
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+
+
 //
-//
-//    implementation 'androidx.fragment:fragment:1.2.2'
-//    implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
-//    implementation 'androidx.lifecycle:lifecycle-service:2.2.0'
-//    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0'
-//    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.2.0'
+//    // Annotation processor
+//    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+//    // alternately - if using Java8, use the following instead of lifecycle-compiler
+//    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+
 
 
 
