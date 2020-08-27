@@ -2,6 +2,7 @@ package hfad.com.studytimeapp.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
@@ -26,10 +27,14 @@ class MainActivity : FragmentActivity() {
 
 
         val viewmodel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+//        viewmodel.insertStudySession()
+
         viewmodel.setAllSelectedMonthData(8)
-//
+
         val currentDayOfMonth = LocalDateTime.now().dayOfMonth
         val currentMonth = LocalDateTime.now().monthValue
+
+        Log.i("MainActivity", "currentDayOfMonth is $currentDayOfMonth current month is $currentMonth")
 
         viewmodel.setLastSevenStudySessionsData(currentMonth, currentDayOfMonth)
 

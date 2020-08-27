@@ -8,8 +8,8 @@ import androidx.room.Query
 @Dao
 interface StudyDao {
 
-    @Query("select * from study_table where month= :currentMonth and dayOfMonth between :currentDayOfMonth - 7 and :currentDayOfMonth")
-    suspend fun getLastSevenSessions(currentMonth: Int, currentDayOfMonth: Int) : List<Study>
+    @Query("select hours from study_table where month= :currentMonth and dayOfMonth between :currentDayOfMonth - 7 and :currentDayOfMonth")
+    suspend fun getLastSevenSessions(currentMonth: Int, currentDayOfMonth: Int) : List<Float>
 
     @Insert
     suspend fun insertStudySession(study: Study)
@@ -20,4 +20,7 @@ interface StudyDao {
 
     @Query("select * from study_table where month= :monthSelected")
     suspend fun getAllSessionsWithMatchingMonth(monthSelected: Int): List<Study>
+
+
+
 }

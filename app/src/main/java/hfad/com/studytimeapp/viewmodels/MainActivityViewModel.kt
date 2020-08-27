@@ -23,6 +23,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     private val studyDao = StudyDatabase.getDatabase(application, viewModelScope).studyDao()
     private val repository = StudyRepository(studyDao)
+    private val weekDays = arrayListOf<String>(
+        "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday", "Sunday"
+    )
+    private val listX = arrayListOf<String>("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31")
 
 
     //MainActivity will observe this list - You will need to sort this list
@@ -46,7 +50,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
 
     private val _sessionsWithMatchingMonth = MutableLiveData<List<Study>>()
-    private val _lastSevenStudySession = MutableLiveData<List<Study>>()
+    private val _lastSevenStudySessionHours = MutableLiveData<List<Float>>()
 
 
 
@@ -92,22 +96,19 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     fun setLastSevenStudySessionsData(currentMonth: Int, currentDayOfMonth: Int){
         viewModelScope.launch {
-            _lastSevenStudySession.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
+            _lastSevenStudySessionHours.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
 
             val entries = ArrayList<BarEntry>()
 
-            for(session in _lastSevenStudySession.value!!.indices){
-                entries.add(BarEntry(_lastSevenStudySession.value!![session].hours, session))
+            for(session in _lastSevenStudySessionHours.value!!.indices){
+                entries.add(BarEntry(_lastSevenStudySessionHours.value!![session], session))
             }
 
             val barDataSet = BarDataSet(entries, "Cells")
 
-            val labels = ArrayList<String>()
-            for(i in 0 until 32){
-                labels.add(i.toString())
-            }
 
-            _weekBarData.value = BarData(labels, barDataSet)
+
+            _weekBarData.value = BarData(listX, barDataSet)
         }
     }
 
@@ -120,11 +121,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             for (session in 0 until 31) {
 
                 var study = Study(
-                    hours = 4F,
-                    minutes = 60,
+                    hours = 8F,
+                    minutes = 80,
                     date = "2020-08-27",
                     weekDay = "WEDNESDAY",
-                    month = 8,
+                    month = 11,
                     dayOfMonth = session
 
                 )
