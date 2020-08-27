@@ -6,10 +6,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.lifecycle.ViewModelProvider
 import hfad.com.studytimeapp.R
 import hfad.com.studytimeapp.databinding.ActivityMainBinding
 import hfad.com.studytimeapp.fragments.MonthViewFragment
 import hfad.com.studytimeapp.fragments.WeekFragment
+import hfad.com.studytimeapp.viewmodels.MainActivityViewModel
 import java.time.LocalDateTime
 
 
@@ -24,6 +26,8 @@ class MainActivity : FragmentActivity() {
 
 //        val monthViewModel = ViewModelProvider(this).get(MonthViewModel::class.java)
 //        val weekViewModel = ViewModelProvider(this).get(WeekViewModel::class.java)
+
+        val viewmodel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 //
         val currentDayOfMonth = LocalDateTime.now().dayOfMonth
         val currentMonth = LocalDateTime.now().monthValue

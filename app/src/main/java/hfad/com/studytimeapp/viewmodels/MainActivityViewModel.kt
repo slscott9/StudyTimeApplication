@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class MainActivityViewModel(application: Application) : ViewModel(){
+class MainActivityViewModel(application: Application) : AndroidViewModel(application){
 
     val viewModelJob = Job()
     val viewModelScope = CoroutineScope(Dispatchers.Main + viewModelJob)
