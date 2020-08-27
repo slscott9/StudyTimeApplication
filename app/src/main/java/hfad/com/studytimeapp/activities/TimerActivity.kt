@@ -5,23 +5,34 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
+import android.text.format.DateFormat.format
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.os.postDelayed
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import hfad.com.studytimeapp.R
+import hfad.com.studytimeapp.data.Study
 import hfad.com.studytimeapp.databinding.ActivityTimerBinding
+import hfad.com.studytimeapp.viewmodels.MainActivityViewModel
 import kotlinx.android.synthetic.main.activity_timer.*
+import java.lang.String.format
+import java.sql.Time
+import java.text.DateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class TimerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTimerBinding
+    private lateinit var viewModel: MainActivityViewModel
+    private var date =  Date()
 
     var START_MILLI_SECONDS = 0L
-
-    lateinit var countdown_timer: CountDownTimer
+     var countdown_timer: CountDownTimer? = null
     var isRunning: Boolean = false;
     var time_in_milli_seconds = 0L
     var time_in_hours = 0L
@@ -32,6 +43,8 @@ class TimerActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timer)
         binding.lifecycleOwner = this
 
+        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+
         binding.startButton.setOnClickListener {
 
             if (isRunning) {
@@ -41,25 +54,49 @@ class TimerActivity : AppCompatActivity() {
                 time_in_hours = time.toLong()
                 time_in_milli_seconds = TimeUnit.HOURS.toMillis(time_in_hours)
 
-
                 startTimer(time_in_milli_seconds)
             }
         }
 
+
+        //Adding a study session needs to insert into database
         binding.addStudySessionChip.setOnClickListener {
-            binding.startButton.text = "start"
-            countdown_timer.cancel()
-            val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(time_in_milli_seconds)
-            val hoursStudied = (minutesStudied/60.0).toFloat()
+            if(binding.etTimeInput.text.isNullOrEmpty()){
+                Toast.makeText(this, "Please enter a study duration", Toast.LENGTH_SHORT).show()
+            }else{
+                binding.startButton.text = "start"
+                countdown_timer?.cancel()
+                val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(time_in_milli_seconds)
+                val hoursStudied = (minutesStudied/60.0).toFloat()
 
+                val currentDayOfMonth = LocalDateTime.now().dayOfMonth
+                val currentMonth = LocalDateTime.now().monthValue
+                val currentWeekDay = LocalDateTime.now().dayOfWeek
+                val currentDate = LocalDateTime.now()
 
-            Log.i("TimerActivity"," The current hours studied on add click is $hoursStudied")
+                val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+                Log.i("Date", "The Day of year is $formattedDate $currentDayOfMonth")
+
+                val studySession = Study(
+                    hours = hoursStudied,
+                    minutes = minutesStudied,
+                    date = formattedDate,
+                    weekDay = currentWeekDay.toString(),
+                    month = currentMonth,
+                    dayOfMonth = currentDayOfMonth
+                )
+
+                viewModel.insertStudySession(studySession)
+
+                Log.i("TimerActivity"," The current hours studied on add click is $hoursStudied")
+            }
+
         }
 
         binding.btnReset.setOnClickListener {
             resetTimer()
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -71,7 +108,7 @@ class TimerActivity : AppCompatActivity() {
 
     private fun pauseTimer() {
         startButton.text = "Start"
-        countdown_timer.cancel()
+        countdown_timer?.cancel()
         isRunning = false
     }
 
@@ -86,15 +123,14 @@ class TimerActivity : AppCompatActivity() {
                 updateTextUI()
             }
         }
-        countdown_timer.start()
+        countdown_timer?.start()
         isRunning = true
         startButton.text = "Pause"
-
     }
 
     private fun resetTimer() {
         binding.startButton.text = "start"
-        countdown_timer.cancel()
+        countdown_timer?.cancel()
         time_in_milli_seconds = START_MILLI_SECONDS
         updateTextUI()
     }

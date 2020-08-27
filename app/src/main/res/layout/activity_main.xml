@@ -24,8 +24,8 @@
         </FrameLayout>
 
                 <com.google.android.material.chip.ChipGroup
-                    android:layout_width="200dp"
-                    android:layout_height="37dp"
+                    android:layout_width="280dp"
+                    android:layout_height="41dp"
                     android:layout_marginBottom="156dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -48,6 +48,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="study" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/monthChip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="month" />
 
                 </com.google.android.material.chip.ChipGroup>
 
