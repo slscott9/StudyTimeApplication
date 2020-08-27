@@ -2,23 +2,14 @@ package hfad.com.studytimeapp.activities
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
-import androidx.lifecycle.ViewModelProvider
 import hfad.com.studytimeapp.R
 import hfad.com.studytimeapp.databinding.ActivityMainBinding
-import hfad.com.studytimeapp.fragments.DayFragment
 import hfad.com.studytimeapp.fragments.MonthViewFragment
 import hfad.com.studytimeapp.fragments.WeekFragment
-import hfad.com.studytimeapp.viewmodels.MainActivityViewModel
-import hfad.com.studytimeapp.viewmodels.MainViewModelFactory
-import hfad.com.studytimeapp.viewmodels.MonthViewModel
-import hfad.com.studytimeapp.viewmodels.WeekViewModel
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 
@@ -49,9 +40,6 @@ class MainActivity : FragmentActivity() {
 //        viewModel.setLastSevenStudySessionsData(currentMonth, currentDayOfMonth)
 
 
-        supportFragmentManager.commit {
-            add<DayFragment>(R.id.fragment_container, null)
-        }
 
         binding.weekChip.setOnClickListener {
             supportFragmentManager.commit {
@@ -60,12 +48,7 @@ class MainActivity : FragmentActivity() {
             }
         }
 
-        binding.dayChip.setOnClickListener {
-            supportFragmentManager.commit {
-                replace<DayFragment>(R.id.fragment_container, null)
-                addToBackStack(null)
-            }
-        }
+
 
         binding.monthChip.setOnClickListener {
             supportFragmentManager.commit {
