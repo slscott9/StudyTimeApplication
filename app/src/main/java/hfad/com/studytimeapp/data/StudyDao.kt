@@ -22,7 +22,11 @@ interface StudyDao {
     suspend fun insertStudySession(study: Study)
 
 
-//This query updates a currently existing study session
+    /*
+        The problem is when the database is empty how do you know when to call updateStudySession or insert a study session
+     */
+
+
     @Query("update study_table set hours = hours + :a  where dayOfMonth= :currentDayOfMonth and month= :currentMonth")
     suspend fun updateStudySession(currentMonth: Int, currentDayOfMonth: Int, a: Float )
 
