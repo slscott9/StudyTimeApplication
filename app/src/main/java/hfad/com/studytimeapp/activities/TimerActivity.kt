@@ -91,9 +91,7 @@ class TimerActivity : AppCompatActivity() {
 
                 Log.i("TimerActivity"," The current hours studied on add click is $hoursStudied")
             }
-
         }
-
         binding.btnReset.setOnClickListener {
             resetTimer()
         }

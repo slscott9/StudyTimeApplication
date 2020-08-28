@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "study_table")
 data class Study(
     @PrimaryKey(autoGenerate = true)
-    val row_id: Int = 0,
+    val id: Int = 0,
     val hours: Float,
     val minutes: Long,
     val date : String,

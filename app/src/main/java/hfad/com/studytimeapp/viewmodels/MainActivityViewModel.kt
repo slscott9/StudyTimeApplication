@@ -50,7 +50,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
 
     private val _sessionsWithMatchingMonth = MutableLiveData<List<Study>>()
-    private val _lastSevenStudySessionHours = MutableLiveData<List<Float>>()
+    private val _lastSevenStudySessionHours = MutableLiveData<List<Study>>()
 
 
 
@@ -59,6 +59,14 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 //            _lastSevenSessions.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
 //        }
 //    }
+
+    fun updateStudySession(currentMonth: Int, currentDayOfMonth: Int, newHours: Float){
+        viewModelScope.launch {
+            repository.updateStudySession(currentMonth, currentDayOfMonth, newHours)
+        }
+    }
+
+
 
     fun insertStudySession(study: Study){
         viewModelScope.launch {
@@ -94,23 +102,21 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    fun setLastSevenStudySessionsData(currentMonth: Int, currentDayOfMonth: Int){
-        viewModelScope.launch {
-            _lastSevenStudySessionHours.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
-
-            val entries = ArrayList<BarEntry>()
-
-            for(session in _lastSevenStudySessionHours.value!!.indices){
-                entries.add(BarEntry(_lastSevenStudySessionHours.value!![session], session))
-            }
-
-            val barDataSet = BarDataSet(entries, "Cells")
-
-
-
-            _weekBarData.value = BarData(listX, barDataSet)
-        }
-    }
+//    fun setLastSevenStudySessionsData(currentMonth: Int, currentDayOfMonth: Int){
+//        viewModelScope.launch {
+//            _lastSevenStudySessionHours.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
+//
+//            val entries = ArrayList<BarEntry>()
+//
+//            for(session in _lastSevenStudySessionHours.value!!.indices){
+//                entries.add(BarEntry(_lastSevenStudySessionHours.value!![session].hours, session))
+//            }
+//
+//            val barDataSet = BarDataSet(entries, "Cells")
+//
+//            _weekBarData.value = BarData(listX, barDataSet)
+//        }
+//    }
 
 
 
@@ -134,12 +140,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             }
         }
     }
-
-
-
-
-
-
 
     override fun onCleared() {
         super.onCleared()
