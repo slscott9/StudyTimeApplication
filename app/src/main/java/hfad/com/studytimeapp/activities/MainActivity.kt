@@ -30,60 +30,32 @@ class MainActivity : FragmentActivity() {
         val viewmodel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
         val studySession1 = Study(
-            hours = 1F,
+            hours = 30F,
             minutes = 60,
             date = "2020-08-28",
             weekDay = "MONDAY",
             dayOfMonth = 28,
-            month = 8
-
-        )
-        val studySession2 = Study(
-            hours = 2F,
-            minutes = 120,
-            date = "2020-08-28",
-            weekDay = "MONDAY",
-            dayOfMonth = 28,
-            month = 8
-
-        )
-        val studySession3 = Study(
-            hours = 3F,
-            minutes = 180,
-            date = "2020-08-29",
-            weekDay = "MONDAY",
-            dayOfMonth = 29,
-            month = 8
-
-        )
-        val studySession4 = Study(
-            hours = 1F,
-            minutes = 240,
-            date = "2020-08-29",
-            weekDay = "MONDAY",
-            dayOfMonth = 29,
-            month = 8
+            month = 11
 
         )
 
 
 
-//        viewmodel.insertStudySession(studySession1)
-//        viewmodel.insertStudySession(studySession2)
-//        viewmodel.insertStudySession(studySession3)
-        viewmodel.updateStudySession(8, 29, 10F)
+//        viewmodel.upsertStudySession(studySession4)
+//        viewmodel.upsertStudySession(studySession3)
 
 
-//        viewmodel.insertStudySession()
-
-//        viewmodel.setAllSelectedMonthData(8)
 
         val currentDayOfMonth = LocalDateTime.now().dayOfMonth
         val currentMonth = LocalDateTime.now().monthValue
 
-        Log.i("MainActivity", "currentDayOfMonth is $currentDayOfMonth current month is $currentMonth")
+//        viewmodel.insertStudySession()
 
-//        viewmodel.setLastSevenStudySessionsData(currentMonth, currentDayOfMonth)
+        viewmodel.upsertStudySession(studySession1)
+
+        viewmodel.setLastSevenStudySessionsData(11, 30)
+        viewmodel.setAllSelectedMonthData(11)
+
 
 
         binding.weekChip.setOnClickListener {

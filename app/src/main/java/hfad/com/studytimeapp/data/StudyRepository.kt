@@ -5,14 +5,14 @@ import androidx.lifecycle.LiveData
 
 class StudyRepository(private val studyDao: StudyDao) {
 
-//    suspend fun getLastSevenSessions(currentMonth: Int, currentDayOfMonth: Int): List<Study>{
-//        Log.i("StudyRepo", "current month is $currentMonth currentDayOfMonth is $currentDayOfMonth offset is ")
-//        return studyDao.getLastSevenSessions(currentMonth, currentDayOfMonth )
-//    }
+    suspend fun getLastSevenSessions(currentMonth: Int, currentDayOfMonth: Int): List<Study>{
+        Log.i("StudyRepo", "current month is $currentMonth currentDayOfMonth is $currentDayOfMonth offset is ")
+        return studyDao.getLastSevenSessions(currentMonth, currentDayOfMonth )
+    }
 
 
     suspend fun insertStudySession(study: Study){
-        studyDao.insertStudySession(study)
+        studyDao.upsertStudySession(study)
     }
     suspend fun getCurrentStudySession(currentDate: String): Study{
         return studyDao.getCurrentStudySession(currentDate)
@@ -22,7 +22,7 @@ class StudyRepository(private val studyDao: StudyDao) {
         return studyDao.getAllSessionsWithMatchingMonth(monthSelected)
     }
 
-    suspend fun updateStudySession(currentMonth: Int, currentDayOfMonth: Int, newHours: Float){
-        studyDao.updateStudySession(currentMonth, currentDayOfMonth, newHours)
-    }
+//    suspend fun updateStudySession(currentMonth: Int, currentDayOfMonth: Int, newHours: Float){
+//        studyDao.updateStudySession(currentMonth, currentDayOfMonth, newHours)
+//    }
 }

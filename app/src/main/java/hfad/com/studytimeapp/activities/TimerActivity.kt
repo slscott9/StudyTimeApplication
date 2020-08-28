@@ -87,7 +87,7 @@ class TimerActivity : AppCompatActivity() {
                     dayOfMonth = currentDayOfMonth
                 )
 
-                viewModel.insertStudySession(studySession)
+//                viewModel.insertStudySession(studySession)
 
                 Log.i("TimerActivity"," The current hours studied on add click is $hoursStudied")
             }

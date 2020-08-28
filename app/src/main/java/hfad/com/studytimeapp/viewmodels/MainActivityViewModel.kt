@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -26,7 +25,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private val weekDays = arrayListOf<String>(
         "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday", "Sunday"
     )
-    private val listX = arrayListOf<String>("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31")
+    private val monthDayLabels = arrayListOf<String>("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31")
+    private val weekDayLabels = arrayListOf<String>("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
 
     //MainActivity will observe this list - You will need to sort this list
@@ -54,23 +54,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
 
 
-//    fun getLastSevenSessions(currentMonth: Int, currentDayOfMonth: Int){
-//        viewModelScope.launch {
-//            _lastSevenSessions.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
-//        }
-//    }
-
-    fun updateStudySession(currentMonth: Int, currentDayOfMonth: Int, newHours: Float){
+    fun upsertStudySession(newStudySession: Study){
         viewModelScope.launch {
-            repository.updateStudySession(currentMonth, currentDayOfMonth, newHours)
-        }
-    }
-
-
-
-    fun insertStudySession(study: Study){
-        viewModelScope.launch {
-            repository.insertStudySession(study)
+            repository.insertStudySession(newStudySession)
         }
     }
 
@@ -92,47 +78,51 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
             val barDataSet = BarDataSet(entries, "Cells")
 
-            val labels = ArrayList<String>()
-            for(i in 0 until 32){
-                labels.add(i.toString())
-            }
+//            val labels = ArrayList<String>()
+//            for(i in 0 until 32){
+//                labels.add(i.toString())
+//            }
 
-            _monthBarData.value = BarData(labels, barDataSet)
+            _monthBarData.value = BarData(monthDayLabels, barDataSet)
 
         }
     }
 
-//    fun setLastSevenStudySessionsData(currentMonth: Int, currentDayOfMonth: Int){
-//        viewModelScope.launch {
-//            _lastSevenStudySessionHours.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
-//
-//            val entries = ArrayList<BarEntry>()
-//
-//            for(session in _lastSevenStudySessionHours.value!!.indices){
-//                entries.add(BarEntry(_lastSevenStudySessionHours.value!![session].hours, session))
-//            }
-//
-//            val barDataSet = BarDataSet(entries, "Cells")
-//
-//            _weekBarData.value = BarData(listX, barDataSet)
-//        }
-//    }
+    fun setLastSevenStudySessionsData(currentMonth: Int, currentDayOfMonth: Int){
+        viewModelScope.launch {
+            _lastSevenStudySessionHours.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
+
+            val entries = ArrayList<BarEntry>()
+
+            for(session in _lastSevenStudySessionHours.value!!.indices){
+                entries.add(BarEntry(_lastSevenStudySessionHours.value!![session].hours, session))
+            }
+
+            val barDataSet = BarDataSet(entries, "Cells")
+
+            _weekBarData.value = BarData(weekDayLabels, barDataSet)
+        }
+    }
 
 
 
     //Inserts mock study session from MainActivity - already inserted into database though
     fun insertStudySession(){
+
         viewModelScope.launch {
 
-            for (session in 0 until 31) {
+
+            for (day in 0 until 31) {
+
+
 
                 var study = Study(
-                    hours = 8F,
+                    hours = day.toFloat(),
                     minutes = 80,
-                    date = "2020-08-27",
+                    date = "2020-08-${day+1}",
                     weekDay = "WEDNESDAY",
                     month = 11,
-                    dayOfMonth = session
+                    dayOfMonth = day + 1
 
                 )
                 repository.insertStudySession(study)
