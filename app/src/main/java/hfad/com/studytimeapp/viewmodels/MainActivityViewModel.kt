@@ -28,6 +28,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     )
     private val monthDayLabels = arrayListOf<String>("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31")
     private val weekDayLabels = arrayListOf<String>("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+    private val nullLabels = arrayListOf<String>("No Data", "No Data", "No Data", "No Data", "No Data", "No Data", "No Data")
     private val months = arrayListOf<String>("January", "February" ,"March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
 
 
@@ -66,20 +67,23 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
             val entries = MutableList(31){BarEntry(0F, 0)}
 
-            /*
-                Entries uses the prefixed size so we can add values to it add specific indexes
-                BarEntry(value, index) we can specify the index this bar value will be placed
-             */
-            for(i in 0 until  _sessionsWithMatchingMonth.value!!.size){
-                entries[_sessionsWithMatchingMonth.value!![i].dayOfMonth] = BarEntry(_sessionsWithMatchingMonth.value!![i].hours, _sessionsWithMatchingMonth.value!![i].dayOfMonth - 1) //to match the array indexes
+            if(_sessionsWithMatchingMonth.value.isNullOrEmpty()){
+                val barDataSet = BarDataSet(entries, "Hours")
+                _monthBarData.value = BarData(monthDayLabels, barDataSet)
+
+            }else{
+                //Entries uses the prefixed size so we can add values to it add specific indexes
+                //BarEntry(value, index) we can specify the index this bar value will be placed
+
+                for(i in 0 until  _sessionsWithMatchingMonth.value!!.size){
+                    entries[_sessionsWithMatchingMonth.value!![i].dayOfMonth] = BarEntry(_sessionsWithMatchingMonth.value!![i].hours, _sessionsWithMatchingMonth.value!![i].dayOfMonth - 1) //to match the array indexes
+                }
+
+                val barDataSet = BarDataSet(entries, "Hours")
+                month = months[_sessionsWithMatchingMonth.value!![0].month - 1] //set the month value
+
+                _monthBarData.value = BarData(monthDayLabels, barDataSet)
             }
-
-            val barDataSet = BarDataSet(entries, "Hours")
-//            barDataSet.barSpacePercent = .01F
-            month = months[_sessionsWithMatchingMonth.value!![0].month - 1] //set the month value
-
-
-            _monthBarData.value = BarData(monthDayLabels, barDataSet)
 
         }
     }
@@ -89,14 +93,21 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             _lastSevenStudySessionHours.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
 
             val entries = ArrayList<BarEntry>()
-            val datesFromSessions = ArrayList<String>()
 
-            for(session in _lastSevenStudySessionHours.value!!.indices){
-                entries.add(BarEntry(_lastSevenStudySessionHours.value!![session].hours, session))
-                datesFromSessions.add(_lastSevenStudySessionHours.value!![session].date)
-            }
 
-            //check if entries is null, if not loop through entries check the day of the week
+            if(_lastSevenStudySessionHours.value.isNullOrEmpty()){
+                val barDataSet = BarDataSet(entries, "Sessions")
+                _weekBarData.value = BarData(nullLabels, barDataSet)
+
+            }else{
+                val datesFromSessions = ArrayList<String>()
+
+                for(session in _lastSevenStudySessionHours.value!!.indices){
+                    entries.add(BarEntry(_lastSevenStudySessionHours.value!![session].hours, session))
+                    datesFromSessions.add(_lastSevenStudySessionHours.value!![session].date)
+                }
+
+                //check if entries is null, if not loop through entries check the day of the week
 
 //            val dataLabels = arrayListOf<String>()
 //
@@ -104,9 +115,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 //                dataLabels.add(_lastSevenStudySessionHours.value!![i].date)
 //            }
 
-            val barDataSet = BarDataSet(entries, "Cells")
+                val barDataSet = BarDataSet(entries, "Cells")
 
-            _weekBarData.value = BarData(datesFromSessions, barDataSet)
+                _weekBarData.value = BarData(datesFromSessions, barDataSet)
+            }
+
         }
     }
 
