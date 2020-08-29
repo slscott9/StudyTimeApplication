@@ -24,6 +24,7 @@ class MainActivity : FragmentActivity() {
     private lateinit var viewmodel: MainActivityViewModel
     private var currentMonth = 0
     private var currentDayOfMonth = 0
+    private var displayWeekFragment = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,14 +39,25 @@ class MainActivity : FragmentActivity() {
 
 //        viewmodel.insertStudySession()   inserts mock data
 
-        supportFragmentManager.commit {
-            add<WeekFragment>(R.id.fragment_container, null)
+        if (savedInstanceState != null) {
+            if(!savedInstanceState.getBoolean("display")){
+                supportFragmentManager.commit {
+                    replace<MonthViewFragment>(R.id.fragment_container, null)
+                    displayWeekFragment = true
+                }
+            }
+        }else{
+            supportFragmentManager.commit {
+                replace<WeekFragment>(R.id.fragment_container, null)
+                displayWeekFragment = true
+            }
         }
 
         binding.weekChip.setOnClickListener {
             supportFragmentManager.commit {
                 replace<WeekFragment>(R.id.fragment_container, null)
                 addToBackStack(null)
+                displayWeekFragment = true
             }
         }
 
@@ -53,12 +65,18 @@ class MainActivity : FragmentActivity() {
             supportFragmentManager.commit {
                 replace<MonthViewFragment>(R.id.fragment_container, null)
                 addToBackStack(null)
+                displayWeekFragment = false
             }
         }
         binding.addSessionButton.setOnClickListener {
             val intent = Intent(this, TimerActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("display", displayWeekFragment)
     }
 
     override fun onResume() {
