@@ -51,9 +51,9 @@ class MainActivity : FragmentActivity() {
 
 //        viewmodel.insertStudySession()
 
-        viewmodel.upsertStudySession(studySession1)
+//        viewmodel.upsertStudySession(studySession1)
 
-        viewmodel.setLastSevenStudySessionsData(11, 30)
+//        viewmodel.setLastSevenStudySessionsData(11, 6)
         viewmodel.setAllSelectedMonthData(11)
 
 

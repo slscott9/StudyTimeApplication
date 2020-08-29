@@ -76,7 +76,7 @@ class TimerActivity : AppCompatActivity() {
 
                 val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-                Log.i("Date", "The Day of year is $formattedDate $currentDayOfMonth")
+                Log.i("Weekday", "formatted weeday is ${convertWeekDay(currentWeekDay.toString())}")
 
                 val studySession = Study(
                     hours = hoursStudied,
@@ -95,6 +95,12 @@ class TimerActivity : AppCompatActivity() {
         binding.btnReset.setOnClickListener {
             resetTimer()
         }
+    }
+
+    private fun convertWeekDay(weekDay: String): String{
+        weekDay.toLowerCase()
+        weekDay[0].toUpperCase()
+        return weekDay
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

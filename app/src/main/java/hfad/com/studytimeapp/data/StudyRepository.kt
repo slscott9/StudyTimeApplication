@@ -18,7 +18,7 @@ class StudyRepository(private val studyDao: StudyDao) {
         return studyDao.getCurrentStudySession(currentDate)
     }
 
-    suspend fun getAllSessionsWithMatchingMonth(monthSelected: Int): List<Study>{
+    suspend fun getAllSessionsWithMatchingMonth(monthSelected: Int): MutableList<Study>{
         return studyDao.getAllSessionsWithMatchingMonth(monthSelected)
     }
 
