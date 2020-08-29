@@ -34,29 +34,13 @@ class MainActivity : FragmentActivity() {
         currentDayOfMonth = LocalDateTime.now().dayOfMonth
 
 
-         viewmodel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewmodel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
-        val studySession1 = Study(
-            hours = 30F,
-            minutes = 60,
-            date = "2020-08-28",
-            weekDay = "MONDAY",
-            dayOfMonth = 28,
-            month = 11
-
-        )
+//        viewmodel.insertStudySession()   inserts mock data
 
         supportFragmentManager.commit {
             add<WeekFragment>(R.id.fragment_container, null)
         }
-
-
-        val currentDayOfMonth = LocalDateTime.now().dayOfMonth
-        val currentMonth = LocalDateTime.now().monthValue
-
-//        viewmodel.insertStudySession()
-
-
 
         binding.weekChip.setOnClickListener {
             supportFragmentManager.commit {

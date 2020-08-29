@@ -131,16 +131,16 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         viewModelScope.launch {
 
 
-            for (day in 0 until 7) {
+            for (day in 0 until 31 step 2 ) {
 
 
                 var study = Study(
                     hours = day.toFloat(),
                     minutes = 80,
-                    date = "2020-08-${day+1}",
+                    date = "2020-08-${day}",
                     weekDay = "WEDNESDAY",
-                    month = 11,
-                    dayOfMonth = day + 1
+                    month = 8,
+                    dayOfMonth = day
 
                 )
                 repository.insertStudySession(study)
@@ -148,38 +148,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             }
         }
     }
-
-//    fun insertStudySession(){
-//
-//        viewModelScope.launch {
-//
-//
-//
-//
-//                var study = Study(
-//                    hours = 60F,
-//                    minutes = 80,
-//                    date = "2020-08-2",
-//                    weekDay = "WEDNESDAY",
-//                    month = 11,
-//                    dayOfMonth = 2
-//
-//                )
-//
-//            var study2 = Study(
-//                hours = 60F,
-//                minutes = 80,
-//                date = "2020-08-5",
-//                weekDay = "FRIDAY",
-//                month = 11,
-//                dayOfMonth = 5
-//
-//            )
-//                repository.insertStudySession(study2)
-//
-//
-//        }
-//    }
 
     override fun onCleared() {
         super.onCleared()

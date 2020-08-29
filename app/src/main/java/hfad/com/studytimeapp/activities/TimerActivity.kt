@@ -80,7 +80,7 @@ class TimerActivity : AppCompatActivity() {
                 val studySession = Study(
                     hours = hoursStudied,
                     minutes = minutesStudied,
-                    date = currentDate.toString(),
+                    date = formattedDate.toString(),
                     weekDay = currentWeekDay.toString(),
                     month = currentMonth,
                     dayOfMonth = currentDayOfMonth

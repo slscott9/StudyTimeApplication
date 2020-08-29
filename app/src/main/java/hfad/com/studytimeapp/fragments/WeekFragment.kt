@@ -60,7 +60,7 @@ class WeekFragment : Fragment() {
 
     private fun setBarChart(barData: BarData) {
         val xaxis = binding.weekBarChart.xAxis //sets the spacing between the x labels
-        xaxis.spaceBetweenLabels = 0
+//        xaxis.spaceBetweenLabels = 0
 
 //        xaxis.position = XAxis.XAxisPosition.BOTTOM_INSIDE
 //        binding.weekBarChart.setExtraOffsets(5f, 5f,  5f, 5f)
