@@ -92,6 +92,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             }
 
             val barDataSet = BarDataSet(entries, "Hours")
+//            barDataSet.barSpacePercent = .01F
             month = months[_sessionsWithMatchingMonth.value!![0].month - 1] //set the month value
 
 
@@ -100,29 +101,29 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-//    fun setLastSevenStudySessionsData(currentMonth: Int, currentDayOfMonth: Int){
-//        viewModelScope.launch {
-//            _lastSevenStudySessionHours.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
+    fun setLastSevenStudySessionsData(currentMonth: Int, currentDayOfMonth: Int){
+        viewModelScope.launch {
+            _lastSevenStudySessionHours.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
+
+            val entries = ArrayList<BarEntry>()
+
+            for(session in _lastSevenStudySessionHours.value!!.indices){
+                entries.add(BarEntry(_lastSevenStudySessionHours.value!![session].hours, session))
+            }
+
+            //check if entries is null, if not loop through entries check the day of the week
+
+//            val dataLabels = arrayListOf<String>()
 //
-//            val entries = ArrayList<BarEntry>()
-//
-//            for(session in _lastSevenStudySessionHours.value!!.indices){
-//                entries.add(BarEntry(_lastSevenStudySessionHours.value!![session].hours, session))
+//            for(i in _lastSevenStudySessionHours.value!!.indices){
+//                dataLabels.add(_lastSevenStudySessionHours.value!![i].date)
 //            }
-//
-//            //check if entries is null, if not loop through entries check the day of the week
-//
-////            val dataLabels = arrayListOf<String>()
-////
-////            for(i in _lastSevenStudySessionHours.value!!.indices){
-////                dataLabels.add(_lastSevenStudySessionHours.value!![i].date)
-////            }
-//
-//            val barDataSet = BarDataSet(entries, "Cells")
-//
-//            _weekBarData.value = BarData(weekDayLabels, barDataSet)
-//        }
-//    }
+
+            val barDataSet = BarDataSet(entries, "Cells")
+
+            _weekBarData.value = BarData(weekDayLabels, barDataSet)
+        }
+    }
 
 
 

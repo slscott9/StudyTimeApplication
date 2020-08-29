@@ -49,9 +49,6 @@ class MainActivity : FragmentActivity() {
         val currentDayOfMonth = LocalDateTime.now().dayOfMonth
         val currentMonth = LocalDateTime.now().monthValue
 
-//        viewmodel.insertStudySession()
-
-//        viewmodel.upsertStudySession(studySession1)
 
 //        viewmodel.setLastSevenStudySessionsData(11, 6)
         viewmodel.setAllSelectedMonthData(11)
