@@ -50,9 +50,8 @@ class MainActivity : FragmentActivity() {
         val currentMonth = LocalDateTime.now().monthValue
 
 
-//        viewmodel.setLastSevenStudySessionsData(11, 6)
+        viewmodel.setLastSevenStudySessionsData(11, 6)
         viewmodel.setAllSelectedMonthData(11)
-
 
 
         binding.weekChip.setOnClickListener {
