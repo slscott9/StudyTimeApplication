@@ -49,7 +49,6 @@ class MainActivity : FragmentActivity() {
             }
         }
 
-
         binding.monthChip.setOnClickListener {
             supportFragmentManager.commit {
                 replace<MonthViewFragment>(R.id.fragment_container, null)
@@ -60,18 +59,13 @@ class MainActivity : FragmentActivity() {
             val intent = Intent(this, TimerActivity::class.java)
             startActivity(intent)
         }
-
-
     }
 
     override fun onResume() {
         super.onResume()
         viewmodel.setLastSevenStudySessionsData(currentMonth, currentDayOfMonth)
         viewmodel.setAllSelectedMonthData(currentMonth)
-
     }
-
-
 }
 
 

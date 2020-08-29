@@ -26,24 +26,28 @@
                 <com.google.android.material.chip.ChipGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="188dp"
+                    android:layout_marginBottom="196dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.9"
+                    app:layout_constraintHorizontal_bias="0.498"
                     app:layout_constraintStart_toStartOf="parent">
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/weekChip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="week" />
+                            app:chipBackgroundColor="@color/darkBlue"
+                            android:textColor="@color/white"
+                            android:text="@string/week_chip_button_text" />
 
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/monthChip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="month" />
+                            app:chipBackgroundColor="@color/darkBlue"
+                            android:textColor="@color/white"
+                            android:text="@string/month_chip_button_text" />
 
                 </com.google.android.material.chip.ChipGroup>
 
@@ -53,8 +57,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="28dp"
                     android:layout_marginBottom="52dp"
+                    android:backgroundTint="@color/darkBlue"
                     android:clickable="true"
-                    android:src="@drawable/ic_baseline_add_24"
+                    android:src="@drawable/ic_baseline_add_24_white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 

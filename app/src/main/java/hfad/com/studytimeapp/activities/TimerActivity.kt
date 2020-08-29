@@ -29,7 +29,6 @@ class TimerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTimerBinding
     private lateinit var viewModel: MainActivityViewModel
-    private var date =  Date()
 
     var START_MILLI_SECONDS = 0L
      var countdown_timer: CountDownTimer? = null
@@ -58,7 +57,6 @@ class TimerActivity : AppCompatActivity() {
             }
         }
 
-
         //Adding a study session needs to insert into database
         binding.addStudySessionChip.setOnClickListener {
             if(binding.etTimeInput.text.isNullOrEmpty()){
@@ -76,7 +74,6 @@ class TimerActivity : AppCompatActivity() {
 
                 val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-
                 val studySession = Study(
                     hours = hoursStudied,
                     minutes = minutesStudied,
@@ -87,8 +84,7 @@ class TimerActivity : AppCompatActivity() {
                 )
 
                 viewModel.upsertStudySession(studySession)
-
-
+                finish()
             }
         }
         binding.btnReset.setOnClickListener {
@@ -97,13 +93,11 @@ class TimerActivity : AppCompatActivity() {
     }
 
 
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putLong("savedMiliseconds", time_in_milli_seconds)
         Toast.makeText(this, "saved milli seconds is $time_in_milli_seconds", Toast.LENGTH_LONG).show()
     }
-
 
     private fun pauseTimer() {
         startButton.text = "Start"

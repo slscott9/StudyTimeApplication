@@ -30,7 +30,6 @@ class WeekFragment : Fragment() {
     private lateinit var binding: FragmentWeekBinding
     private val viewModel: MainActivityViewModel by activityViewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,11 +40,6 @@ class WeekFragment : Fragment() {
             container,
             false
         )
-
-        val currentDayOfMonth = LocalDateTime.now().dayOfMonth
-        val currentMonth = LocalDateTime.now().monthValue
-        val currentWeekDay = LocalDateTime.now().dayOfWeek
-        val currentDate = LocalDateTime.now()
 
         viewModel.weekBarData.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -59,15 +53,9 @@ class WeekFragment : Fragment() {
 
 
     private fun setBarChart(barData: BarData) {
-        val xaxis = binding.weekBarChart.xAxis //sets the spacing between the x labels
-//        xaxis.spaceBetweenLabels = 0
-
-//        xaxis.position = XAxis.XAxisPosition.BOTTOM_INSIDE
-//        binding.weekBarChart.setExtraOffsets(5f, 5f,  5f, 5f)
-//
         binding.weekBarChart.fitScreen()
         binding.weekBarChart.data = barData // set the data and list of lables into chart
-
+        binding.weekBarChart.setDescription("Sessions from last 7 days")
 
 //        //barDataSet.setColors(ColorTemplate.COLORFUL_COLORS)
 //        barDataSet.color = resources.getColor(R.color.colorAccent)

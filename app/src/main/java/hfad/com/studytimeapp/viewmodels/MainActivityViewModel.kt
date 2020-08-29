@@ -52,18 +52,14 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-
     /*
         Entries must be fixed size in order to set specfic index values. We set its values to emtpy BarEntries.
         Then loop for the size of the study sessions array we get back from the databas query
         we get the entry index from the ith study sessions day of month and set its value to the ith sessions hours and set the index as well
      */
-
-
     fun setAllSelectedMonthData(seletedMonth: Int){
         viewModelScope.launch {
             _sessionsWithMatchingMonth.value = repository.getAllSessionsWithMatchingMonth(seletedMonth)
-
 
             val entries = MutableList(31){BarEntry(0F, 0)}
 
@@ -84,7 +80,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                 _monthBarData.value = BarData(monthDayLabels, barDataSet)
             }
-
         }
     }
 
@@ -93,7 +88,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             _lastSevenStudySessionHours.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
 
             val entries = ArrayList<BarEntry>()
-
 
             if(_lastSevenStudySessionHours.value.isNullOrEmpty()){
                 val barDataSet = BarDataSet(entries, "Sessions")
@@ -107,32 +101,18 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                     datesFromSessions.add(_lastSevenStudySessionHours.value!![session].date)
                 }
 
-                //check if entries is null, if not loop through entries check the day of the week
-
-//            val dataLabels = arrayListOf<String>()
-//
-//            for(i in _lastSevenStudySessionHours.value!!.indices){
-//                dataLabels.add(_lastSevenStudySessionHours.value!![i].date)
-//            }
-
                 val barDataSet = BarDataSet(entries, "Cells")
 
                 _weekBarData.value = BarData(datesFromSessions, barDataSet)
             }
-
         }
     }
 
-
-
 //    Inserts mock study session from MainActivity - already inserted into database though
     fun insertStudySession(){
-
         viewModelScope.launch {
 
-
             for (day in 0 until 31 step 2 ) {
-
 
                 var study = Study(
                     hours = day.toFloat(),
@@ -144,7 +124,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                 )
                 repository.insertStudySession(study)
-
             }
         }
     }
