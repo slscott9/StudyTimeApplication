@@ -14,6 +14,11 @@ interface StudyDao {
     @Query("select * from study_table where month= :monthSelected")
     suspend fun getAllSessionsWithMatchingMonth(monthSelected: Int): MutableList<Study>
 
+
+    /*
+        To get the current week's study sessions query database for current day of week
+     */
+
     @Query("select * from study_table where month= :currentMonth and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth order by dayOfMonth asc")
     suspend fun getLastSevenSessions(currentMonth: Int, currentDayOfMonth: Int): List<Study>
 

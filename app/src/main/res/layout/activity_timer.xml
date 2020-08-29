@@ -26,10 +26,10 @@
             android:id="@+id/timerTextInputLayout"
             android:layout_width="190dp"
             android:layout_height="79dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
             android:hint="Enter study duration"
-            app:layout_constraintBottom_toBottomOf="@+id/startButton"
-            app:layout_constraintEnd_toStartOf="@+id/startButton"
+            app:layout_constraintBottom_toBottomOf="@+id/btnReset"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/startButton">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -42,8 +42,8 @@
             android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="168dp"
-            android:layout_marginEnd="72dp"
+            android:layout_marginTop="136dp"
+            android:layout_marginEnd="64dp"
             android:text="start"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTimerCountDown" />
@@ -52,11 +52,10 @@
             android:id="@+id/addStudySessionChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="48dp"
             android:layout_marginTop="20dp"
             android:text="add session"
             app:chipIcon="@drawable/ic_baseline_save_24"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/timerTextInputLayout"
             app:layout_constraintTop_toBottomOf="@+id/timerTextInputLayout" />
 
         <Button

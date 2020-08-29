@@ -31,16 +31,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private val months = arrayListOf<String>("January", "February" ,"March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
 
 
-    //MainActivity will observe this list - You will need to sort this list
-    private val _lastSevenSessions = MutableLiveData<List<Study>>()
-    val lastSevenSessions: LiveData<List<Study>>
-    get() = _lastSevenSessions
-
-    private val _currentStudySession = MutableLiveData<Study>()
-    val currentStudySession: LiveData<Study>
-    get() = _currentStudySession
-
-
     private val _weekBarData = MutableLiveData<BarData>()
     val weekBarData: LiveData<BarData>
         get() = _weekBarData
@@ -55,19 +45,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private val _lastSevenStudySessionHours = MutableLiveData<List<Study>>()
     var month: String = ""
 
-
-
     fun upsertStudySession(newStudySession: Study){
         viewModelScope.launch {
             repository.insertStudySession(newStudySession)
         }
     }
 
-    fun getCurrentStudySession(currentDate: String){
-        viewModelScope.launch {
-            _currentStudySession.value = repository.getCurrentStudySession(currentDate)
-        }
-    }
 
     /*
         Entries must be fixed size in order to set specfic index values. We set its values to emtpy BarEntries.
@@ -106,9 +89,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             _lastSevenStudySessionHours.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
 
             val entries = ArrayList<BarEntry>()
+            val datesFromSessions = ArrayList<String>()
 
             for(session in _lastSevenStudySessionHours.value!!.indices){
                 entries.add(BarEntry(_lastSevenStudySessionHours.value!![session].hours, session))
+                datesFromSessions.add(_lastSevenStudySessionHours.value!![session].date)
             }
 
             //check if entries is null, if not loop through entries check the day of the week
@@ -121,67 +106,67 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
             val barDataSet = BarDataSet(entries, "Cells")
 
-            _weekBarData.value = BarData(weekDayLabels, barDataSet)
+            _weekBarData.value = BarData(datesFromSessions, barDataSet)
         }
     }
 
 
 
-    //Inserts mock study session from MainActivity - already inserted into database though
-//    fun insertStudySession(){
-//
-//        viewModelScope.launch {
-//
-//
-//            for (day in 0 until 15) {
-//
-//
-//                var study = Study(
-//                    hours = day.toFloat(),
-//                    minutes = 80,
-//                    date = "2020-08-${day+3}",
-//                    weekDay = "WEDNESDAY",
-//                    month = 11,
-//                    dayOfMonth = day + 3
-//
-//                )
-//                repository.insertStudySession(study)
-//
-//            }
-//        }
-//    }
-
+//    Inserts mock study session from MainActivity - already inserted into database though
     fun insertStudySession(){
 
         viewModelScope.launch {
 
 
+            for (day in 0 until 7) {
 
 
                 var study = Study(
-                    hours = 60F,
+                    hours = day.toFloat(),
                     minutes = 80,
-                    date = "2020-08-2",
+                    date = "2020-08-${day+1}",
                     weekDay = "WEDNESDAY",
                     month = 11,
-                    dayOfMonth = 2
+                    dayOfMonth = day + 1
 
                 )
+                repository.insertStudySession(study)
 
-            var study2 = Study(
-                hours = 60F,
-                minutes = 80,
-                date = "2020-08-5",
-                weekDay = "FRIDAY",
-                month = 11,
-                dayOfMonth = 5
-
-            )
-                repository.insertStudySession(study2)
-
-
+            }
         }
     }
+
+//    fun insertStudySession(){
+//
+//        viewModelScope.launch {
+//
+//
+//
+//
+//                var study = Study(
+//                    hours = 60F,
+//                    minutes = 80,
+//                    date = "2020-08-2",
+//                    weekDay = "WEDNESDAY",
+//                    month = 11,
+//                    dayOfMonth = 2
+//
+//                )
+//
+//            var study2 = Study(
+//                hours = 60F,
+//                minutes = 80,
+//                date = "2020-08-5",
+//                weekDay = "FRIDAY",
+//                month = 11,
+//                dayOfMonth = 5
+//
+//            )
+//                repository.insertStudySession(study2)
+//
+//
+//        }
+//    }
 
     override fun onCleared() {
         super.onCleared()

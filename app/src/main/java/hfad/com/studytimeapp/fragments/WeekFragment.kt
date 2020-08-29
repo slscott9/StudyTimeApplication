@@ -42,6 +42,11 @@ class WeekFragment : Fragment() {
             false
         )
 
+        val currentDayOfMonth = LocalDateTime.now().dayOfMonth
+        val currentMonth = LocalDateTime.now().monthValue
+        val currentWeekDay = LocalDateTime.now().dayOfWeek
+        val currentDate = LocalDateTime.now()
+
         viewModel.weekBarData.observe(viewLifecycleOwner, Observer {
             it?.let {
                 setBarChart(it)
@@ -50,6 +55,7 @@ class WeekFragment : Fragment() {
 
         return binding.root
     }
+
 
 
     private fun setBarChart(barData: BarData) {

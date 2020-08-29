@@ -76,20 +76,19 @@ class TimerActivity : AppCompatActivity() {
 
                 val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-                Log.i("Weekday", "formatted weeday is ${convertWeekDay(currentWeekDay.toString())}")
 
                 val studySession = Study(
                     hours = hoursStudied,
                     minutes = minutesStudied,
-                    date = formattedDate,
+                    date = currentDate.toString(),
                     weekDay = currentWeekDay.toString(),
                     month = currentMonth,
                     dayOfMonth = currentDayOfMonth
                 )
 
-//                viewModel.insertStudySession(studySession)
+                viewModel.upsertStudySession(studySession)
 
-                Log.i("TimerActivity"," The current hours studied on add click is $hoursStudied")
+
             }
         }
         binding.btnReset.setOnClickListener {
@@ -97,11 +96,7 @@ class TimerActivity : AppCompatActivity() {
         }
     }
 
-    private fun convertWeekDay(weekDay: String): String{
-        weekDay.toLowerCase()
-        weekDay[0].toUpperCase()
-        return weekDay
-    }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

@@ -24,11 +24,12 @@
         </FrameLayout>
 
                 <com.google.android.material.chip.ChipGroup
-                    android:layout_width="280dp"
-                    android:layout_height="41dp"
-                    android:layout_marginBottom="156dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="188dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.9"
                     app:layout_constraintStart_toStartOf="parent">
 
                         <com.google.android.material.chip.Chip
@@ -37,11 +38,6 @@
                             android:layout_height="wrap_content"
                             android:text="week" />
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/studyChip"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="study" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/monthChip"
@@ -50,6 +46,17 @@
                             android:text="month" />
 
                 </com.google.android.material.chip.ChipGroup>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/addSessionFab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="28dp"
+                    android:layout_marginBottom="52dp"
+                    android:clickable="true"
+                    android:src="@drawable/ic_baseline_add_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

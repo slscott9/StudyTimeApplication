@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import kotlinx.coroutines.CoroutineScope
 
-@Database(entities = [Study::class], version = 14, exportSchema = false)
+@Database(entities = [Study::class], version = 16, exportSchema = false)
 abstract class StudyDatabase : RoomDatabase() {
 
     abstract fun studyDao(): StudyDao
