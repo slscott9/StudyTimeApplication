@@ -2,14 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
     tools:context=".activities.MainActivity">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
         <FrameLayout
@@ -23,50 +20,45 @@
 
         </FrameLayout>
 
-                <com.google.android.material.chip.ChipGroup
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="196dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.498"
-                    app:layout_constraintStart_toStartOf="parent">
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="196dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent">
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/weekChip"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:chipBackgroundColor="@color/darkBlue"
-                            android:textColor="@color/white"
-                            android:text="@string/week_chip_button_text" />
-
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/monthChip"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:chipBackgroundColor="@color/darkBlue"
-                            android:textColor="@color/white"
-                            android:text="@string/month_chip_button_text" />
-
-                </com.google.android.material.chip.ChipGroup>
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/addSessionFab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="28dp"
-                    android:layout_marginBottom="52dp"
-                    android:backgroundTint="@color/darkBlue"
-                    android:clickable="true"
-                    android:src="@drawable/ic_baseline_add_24_white"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/weekChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/week_chip_button_text"
+                android:textColor="@color/white"
+                app:chipBackgroundColor="@color/darkBlue" />
 
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/monthChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/month_chip_button_text"
+                android:textColor="@color/white"
+                app:chipBackgroundColor="@color/darkBlue" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <ImageButton
+            android:id="@+id/addSessionButton"
+            android:layout_width="50dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="44dp"
+            android:layout_marginBottom="44dp"
+            android:background="@drawable/round_button"
+            android:src="@drawable/ic_baseline_add_24_w"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -55,7 +55,7 @@ class MainActivity : FragmentActivity() {
                 addToBackStack(null)
             }
         }
-        binding.addSessionFab.setOnClickListener {
+        binding.addSessionButton.setOnClickListener {
             val intent = Intent(this, TimerActivity::class.java)
             startActivity(intent)
         }
