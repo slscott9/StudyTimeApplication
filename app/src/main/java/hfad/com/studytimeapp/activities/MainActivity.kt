@@ -36,12 +36,9 @@ class MainActivity : FragmentActivity() {
 
 
 
-
         viewmodel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
-//        viewmodel.insertAStudySession()
 
-//        viewmodel.insertStudySession()   inserts mock data
 
         if (savedInstanceState != null) {
             if(!savedInstanceState.getBoolean("display")){

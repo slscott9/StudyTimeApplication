@@ -8,7 +8,7 @@ import hfad.com.studytimeapp.R
 import kotlinx.android.synthetic.main.year_list_item.view.*
 
 
-class SessionMonthSelectorAdapter( ) : RecyclerView.Adapter<SessionMonthSelectorAdapter.SessionMonthViewHolder>() {
+class YearsWithStudySessionsAdapter(private val listener: (Int)-> Unit) : RecyclerView.Adapter<YearsWithStudySessionsAdapter.YearsWithSessionsViewHolder>() {
 
 
     /*
@@ -23,19 +23,22 @@ class SessionMonthSelectorAdapter( ) : RecyclerView.Adapter<SessionMonthSelector
 
     var yearList = emptyList<Int>()
 
-    class SessionMonthViewHolder(val cardView: CardView): RecyclerView.ViewHolder(cardView){
+    class YearsWithSessionsViewHolder(val cardView: CardView): RecyclerView.ViewHolder(cardView){
 
     }
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): SessionMonthViewHolder {
+    ): YearsWithSessionsViewHolder {
         val cardView = LayoutInflater.from(parent.context).inflate(R.layout.year_list_item, parent, false) as CardView
-        return SessionMonthViewHolder(cardView)
+        return YearsWithSessionsViewHolder(cardView)
     }
 
-    override fun onBindViewHolder(holder: SessionMonthViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: YearsWithSessionsViewHolder, position: Int) {
+
+        val item = yearList[position]
         holder.cardView.yearTV.text = yearList[position].toString()
+        holder.cardView.setOnClickListener { listener(item) } //When card view is clicked, pass the item value from the array (year)  into SessionWithMonthSelectorActivity
     }
 
     override fun getItemCount() = yearList.size

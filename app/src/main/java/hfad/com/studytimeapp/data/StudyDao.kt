@@ -33,6 +33,9 @@ interface StudyDao {
     @Query("select distinct year from study_table where year <= :currentYear order by year asc")
     suspend fun getYearsWithSessions(currentYear: Int): List<Int>
 
+    @Query("select  month from study_table where year = :yearSelected order by month asc")
+    suspend fun getMonthsWithSelectedYear(yearSelected : Int) : List<Int>
+
 
 
 

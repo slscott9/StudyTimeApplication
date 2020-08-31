@@ -29,6 +29,9 @@ class StudyRepository(private val studyDao: StudyDao) {
         return studyDao.getYearsWithSessions(currentYear)
     }
 
+    suspend fun getMonthWithSelectedYear(yearSelected : Int): List<Int>{
+       return studyDao.getMonthsWithSelectedYear(yearSelected)
+    }
 //    suspend fun updateStudySession(currentMonth: Int, currentDayOfMonth: Int, newHours: Float){
 //        studyDao.updateStudySession(currentMonth, currentDayOfMonth, newHours)
 //    }

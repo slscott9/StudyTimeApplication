@@ -15,11 +15,18 @@ class SessionMonthSelectorViewModel(val currentYear: Int, application: Applicati
     private val viewModelScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
 
+
+
     private val studyDao = StudyDatabase.getDatabase(application, viewModelScope).studyDao()
     private val repository = StudyRepository(studyDao)
 
     private val _yearList = MutableLiveData<List<Int>>()
     var yearsList: LiveData<List<Int>> = _yearList
+
+    private val _monthsFromSelectedYear = MutableLiveData<List<Int>>()
+    var monthsFromSelectedYear: LiveData<List<Int>> = _monthsFromSelectedYear
+
+
 
     init {
         initYearsList(currentYear)
@@ -28,6 +35,12 @@ class SessionMonthSelectorViewModel(val currentYear: Int, application: Applicati
     private fun initYearsList(currentYear: Int){
         viewModelScope.launch {
             _yearList.value = repository.getYearsWithSessions(currentYear)
+        }
+    }
+
+    fun getMonthsWithSelectedYear(selectedYear: Int){
+        viewModelScope.launch {
+            _monthsFromSelectedYear.value = repository.getMonthWithSelectedYear(selectedYear)
         }
     }
 

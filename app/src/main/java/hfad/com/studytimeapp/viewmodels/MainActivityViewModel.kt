@@ -133,9 +133,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             val study = Study(
                 hours = 10F,
                 minutes = 20,
-                date = "2019-08-27",
+                date = "2019-09-27",
                 weekDay = "MONDAY",
-                month = 8,
+                month = 9,
                 year = 2019,
                 dayOfMonth = 27
             )
