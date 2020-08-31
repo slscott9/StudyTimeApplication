@@ -49,16 +49,18 @@
 
         </com.google.android.material.chip.ChipGroup>
 
-        <ImageButton
-            android:id="@+id/addSessionButton"
-            android:layout_width="50dp"
-            android:layout_height="45dp"
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addSessionFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/round_button"
             android:src="@drawable/ic_baseline_add_24_w"
+            app:backgroundTint="@color/darkBlue"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/white" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

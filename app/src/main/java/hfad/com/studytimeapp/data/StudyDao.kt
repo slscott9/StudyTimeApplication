@@ -7,6 +7,11 @@ import androidx.room.*
 interface StudyDao {
 
 
+    /*
+        Should we return live data straight form the dao? The repo methods can receive parameters that we can use to query the database
+     */
+
+
     @Query("select * from study_table where date= :currentDate ")
     suspend fun getCurrentStudySession(currentDate: String): Study
 

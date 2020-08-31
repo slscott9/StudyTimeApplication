@@ -14,12 +14,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlin.time.hours
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application){
 
-    val viewModelJob = Job()
-    val viewModelScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+    private val viewModelJob = Job()
+    private val viewModelScope = CoroutineScope(Dispatchers.Main + viewModelJob) //coroutine scope keeps track of coroutines launch coroutines inside of coroutine scopes
 
     private val studyDao = StudyDatabase.getDatabase(application, viewModelScope).studyDao()
     private val repository = StudyRepository(studyDao)
@@ -42,8 +41,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         get() = _monthBarData
 
 
-    private val _sessionsWithMatchingMonth = MutableLiveData<MutableList<Study>>()
-    private val _lastSevenStudySessionHours = MutableLiveData<List<Study>>()
+    private val allSessionWithMatchingMonth = MutableLiveData<MutableList<Study>>()
+    private val lastSevenStudySessions = MutableLiveData<List<Study>>()
     var month: String = ""
 
     fun upsertStudySession(newStudySession: Study){
@@ -59,51 +58,51 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
      */
     fun setAllSelectedMonthData(seletedMonth: Int){
         viewModelScope.launch {
-            _sessionsWithMatchingMonth.value = repository.getAllSessionsWithMatchingMonth(seletedMonth)
+            allSessionWithMatchingMonth.value = repository.getAllSessionsWithMatchingMonth(seletedMonth)
 
-            val entries = MutableList(31){BarEntry(0F, 0)}
+            val monthBarDataSetValues = MutableList(31){BarEntry(0F, 0)}
 
-            if(_sessionsWithMatchingMonth.value.isNullOrEmpty()){
-                val barDataSet = BarDataSet(entries, "Hours")
+            if(allSessionWithMatchingMonth.value.isNullOrEmpty()){
+                val barDataSet = BarDataSet(monthBarDataSetValues, "Hours")
                 _monthBarData.value = BarData(monthDayLabels, barDataSet)
 
             }else{
                 //Entries uses the prefixed size so we can add values to it add specific indexes
                 //BarEntry(value, index) we can specify the index this bar value will be placed
 
-                for(i in 0 until  _sessionsWithMatchingMonth.value!!.size){
-                    entries[_sessionsWithMatchingMonth.value!![i].dayOfMonth] = BarEntry(_sessionsWithMatchingMonth.value!![i].hours, _sessionsWithMatchingMonth.value!![i].dayOfMonth - 1) //to match the array indexes
+                for(i in 0 until  allSessionWithMatchingMonth.value!!.size){
+                    monthBarDataSetValues[allSessionWithMatchingMonth.value!![i].dayOfMonth] = BarEntry(allSessionWithMatchingMonth.value!![i].hours, allSessionWithMatchingMonth.value!![i].dayOfMonth - 1) //to match the array indexes
                 }
 
-                val barDataSet = BarDataSet(entries, "Hours")
-                month = months[_sessionsWithMatchingMonth.value!![0].month - 1] //set the month value
+                val monthBarDataSet = BarDataSet(monthBarDataSetValues, "Hours")
+                month = months[allSessionWithMatchingMonth.value!![0].month - 1] //set the month value
 
-                _monthBarData.value = BarData(monthDayLabels, barDataSet)
+                _monthBarData.value = BarData(monthDayLabels, monthBarDataSet)
             }
         }
     }
 
     fun setLastSevenStudySessionsData(currentMonth: Int, currentDayOfMonth: Int){
         viewModelScope.launch {
-            _lastSevenStudySessionHours.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
+            lastSevenStudySessions.value = repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
 
-            val entries = ArrayList<BarEntry>()
+            val weekBarDataSetValues = ArrayList<BarEntry>()
 
-            if(_lastSevenStudySessionHours.value.isNullOrEmpty()){
-                val barDataSet = BarDataSet(entries, "Sessions")
+            if(lastSevenStudySessions.value.isNullOrEmpty()){
+                val barDataSet = BarDataSet(weekBarDataSetValues, "Sessions")
                 _weekBarData.value = BarData(nullLabels, barDataSet)
 
             }else{
                 val datesFromSessions = ArrayList<String>()
 
-                for(session in _lastSevenStudySessionHours.value!!.indices){
-                    entries.add(BarEntry(_lastSevenStudySessionHours.value!![session].hours, session))
-                    datesFromSessions.add(_lastSevenStudySessionHours.value!![session].date)
+                for(session in lastSevenStudySessions.value!!.indices){
+                    weekBarDataSetValues.add(BarEntry(lastSevenStudySessions.value!![session].hours, session))
+                    datesFromSessions.add(lastSevenStudySessions.value!![session].date)
                 }
 
-                val barDataSet = BarDataSet(entries, "Cells")
+                val monthBarDataSet = BarDataSet(weekBarDataSetValues, "Cells")
 
-                _weekBarData.value = BarData(datesFromSessions, barDataSet)
+                _weekBarData.value = BarData(datesFromSessions, monthBarDataSet)
             }
         }
     }
@@ -128,7 +127,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    override fun onCleared() {
+    override fun onCleared() { //if view model is destroyed all coroutines within the job are canceled - prevents work leaks
         super.onCleared()
         viewModelJob.cancel()
     }

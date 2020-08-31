@@ -68,7 +68,7 @@ class MainActivity : FragmentActivity() {
                 displayWeekFragment = false
             }
         }
-        binding.addSessionButton.setOnClickListener {
+        binding.addSessionFAB.setOnClickListener {
             val intent = Intent(this, TimerActivity::class.java)
             startActivity(intent)
         }
