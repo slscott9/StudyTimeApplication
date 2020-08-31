@@ -1,5 +1,6 @@
 package hfad.com.studytimeapp.activities
 
+import android.content.DialogInterface
 import android.inputmethodservice.Keyboard
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.text.format.DateFormat.format
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.postDelayed
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -30,11 +32,23 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTimerBinding
     private lateinit var viewModel: MainActivityViewModel
 
-    var START_MILLI_SECONDS = 0L
-     var countdown_timer: CountDownTimer? = null
+    private var START_MILLI_SECONDS = 0L
+    private var countdown_timer: CountDownTimer? = null
     var isRunning: Boolean = false;
-    var time_in_milli_seconds = 0L
-    var time_in_hours = 0L
+    private var time_in_milli_seconds = 0L
+    private var time_in_hours = 0L
+
+    private lateinit var studySession: Study
+
+
+    private val currentDayOfMonth = LocalDateTime.now().dayOfMonth
+    private val currentMonth = LocalDateTime.now().monthValue
+    private val currentWeekDay = LocalDateTime.now().dayOfWeek
+    private val currentDate = LocalDateTime.now()
+    private val currentYear = LocalDateTime.now().year
+
+    private val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,20 +81,20 @@ class TimerActivity : AppCompatActivity() {
                 val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(time_in_milli_seconds)
                 val hoursStudied = (minutesStudied/60.0).toFloat()
 
-                val currentDayOfMonth = LocalDateTime.now().dayOfMonth
-                val currentMonth = LocalDateTime.now().monthValue
-                val currentWeekDay = LocalDateTime.now().dayOfWeek
-                val currentDate = LocalDateTime.now()
+//                val currentDayOfMonth = LocalDateTime.now().dayOfMonth
+//                val currentMonth = LocalDateTime.now().monthValue
+//                val currentWeekDay = LocalDateTime.now().dayOfWeek
+//                val currentDate = LocalDateTime.now()
 
-                val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-                val studySession = Study(
+                 studySession = Study(
                     hours = hoursStudied,
                     minutes = minutesStudied,
                     date = formattedDate.toString(),
                     weekDay = currentWeekDay.toString(),
                     month = currentMonth,
-                    dayOfMonth = currentDayOfMonth
+                    dayOfMonth = currentDayOfMonth,
+                     year = currentYear
                 )
 
                 viewModel.upsertStudySession(studySession)
@@ -108,7 +122,7 @@ class TimerActivity : AppCompatActivity() {
     private fun startTimer(time_in_seconds: Long) {
         countdown_timer = object : CountDownTimer(time_in_seconds, 1000) {
             override fun onFinish() {
-
+                saveSessionDialog()
             }
 
             override fun onTick(p0: Long) {
@@ -140,6 +154,25 @@ class TimerActivity : AppCompatActivity() {
         tvTimerCountDown.text = "$time"
     }
 
+
+    private fun saveSessionDialog(){
+
+        studySession = Study(date = formattedDate.toString(), hours = time_in_hours.toFloat(), minutes = 0, weekDay = currentWeekDay.toString(), dayOfMonth = currentDayOfMonth, month = currentMonth, year = currentYear)
+
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setMessage("Are you sure you want to delete this grave?")
+            .setCancelable(false)
+            .setPositiveButton("Yes") { _, _ ->
+                viewModel.upsertStudySession(studySession)
+                finish()
+            }
+            .setNegativeButton("No") { dialogInterface, _ ->
+                dialogInterface.cancel()
+            }
+        val alert = dialogBuilder.create()
+        alert.setTitle("Save study session")
+        alert.show()
+    }
 
 
 }

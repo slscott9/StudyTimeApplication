@@ -1,6 +1,7 @@
 package hfad.com.studytimeapp.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 
 @Dao
@@ -10,6 +11,8 @@ interface StudyDao {
     /*
         Should we return live data straight form the dao? The repo methods can receive parameters that we can use to query the database
      */
+
+
 
 
     @Query("select * from study_table where date= :currentDate ")
@@ -26,6 +29,9 @@ interface StudyDao {
 
     @Query("select * from study_table where month= :currentMonth and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth order by dayOfMonth asc")
     suspend fun getLastSevenSessions(currentMonth: Int, currentDayOfMonth: Int): List<Study>
+
+    @Query("select distinct year from study_table where year <= :currentYear order by year asc")
+    suspend fun getYearsWithSessions(currentYear: Int): List<Int>
 
 
 

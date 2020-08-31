@@ -35,7 +35,11 @@ class MainActivity : FragmentActivity() {
         currentDayOfMonth = LocalDateTime.now().dayOfMonth
 
 
+
+
         viewmodel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+
+//        viewmodel.insertAStudySession()
 
 //        viewmodel.insertStudySession()   inserts mock data
 
@@ -70,6 +74,11 @@ class MainActivity : FragmentActivity() {
         }
         binding.addSessionFAB.setOnClickListener {
             val intent = Intent(this, TimerActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnGoToSessionView.setOnClickListener {
+            val intent = Intent(this, SessionMonthSelectorActivity::class.java)
             startActivity(intent)
         }
     }

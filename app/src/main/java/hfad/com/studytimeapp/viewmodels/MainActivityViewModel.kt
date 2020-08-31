@@ -67,15 +67,15 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 _monthBarData.value = BarData(monthDayLabels, barDataSet)
 
             }else{
-                //Entries uses the prefixed size so we can add values to it add specific indexes
+                //Entries uses the fixed size so we can add values to it at specific indexes
                 //BarEntry(value, index) we can specify the index this bar value will be placed
 
                 for(i in 0 until  allSessionWithMatchingMonth.value!!.size){
-                    monthBarDataSetValues[allSessionWithMatchingMonth.value!![i].dayOfMonth] = BarEntry(allSessionWithMatchingMonth.value!![i].hours, allSessionWithMatchingMonth.value!![i].dayOfMonth - 1) //to match the array indexes
+                    monthBarDataSetValues[allSessionWithMatchingMonth.value!![i].dayOfMonth - 1] = BarEntry(allSessionWithMatchingMonth.value!![i].hours, allSessionWithMatchingMonth.value!![i].dayOfMonth - 1) //to match the array indexes
                 }
 
                 val monthBarDataSet = BarDataSet(monthBarDataSetValues, "Hours")
-                month = months[allSessionWithMatchingMonth.value!![0].month - 1] //set the month value
+                month = months[allSessionWithMatchingMonth.value!![0].month - 1] //set the month value to be displayed in the monthBarChart's description
 
                 _monthBarData.value = BarData(monthDayLabels, monthBarDataSet)
             }
@@ -96,13 +96,13 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 val datesFromSessions = ArrayList<String>()
 
                 for(session in lastSevenStudySessions.value!!.indices){
-                    weekBarDataSetValues.add(BarEntry(lastSevenStudySessions.value!![session].hours, session))
+                    weekBarDataSetValues.add(BarEntry(lastSevenStudySessions.value!![session].hours, session)) //
                     datesFromSessions.add(lastSevenStudySessions.value!![session].date)
                 }
 
-                val monthBarDataSet = BarDataSet(weekBarDataSetValues, "Cells")
+                val weekBarDataSet = BarDataSet(weekBarDataSetValues, "Cells")
 
-                _weekBarData.value = BarData(datesFromSessions, monthBarDataSet)
+                _weekBarData.value = BarData(datesFromSessions, weekBarDataSet)
             }
         }
     }
@@ -119,11 +119,28 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                     date = "2020-08-${day}",
                     weekDay = "WEDNESDAY",
                     month = 8,
-                    dayOfMonth = day
+                    dayOfMonth = day,
+                    year = 0
 
                 )
                 repository.insertStudySession(study)
             }
+        }
+    }
+
+    fun insertAStudySession(){
+        viewModelScope.launch {
+            val study = Study(
+                hours = 10F,
+                minutes = 20,
+                date = "2019-08-27",
+                weekDay = "MONDAY",
+                month = 8,
+                year = 2019,
+                dayOfMonth = 27
+            )
+
+            repository.insertStudySession(study)
         }
     }
 
