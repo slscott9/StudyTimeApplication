@@ -47,6 +47,10 @@ class WeekFragment : Fragment() {
             }
         })
 
+        viewModel.lastSevenStudySessions.observe(viewLifecycleOwner, Observer {
+            viewModel.setLastSevenSessionsBarData()
+        })
+
         return binding.root
     }
 

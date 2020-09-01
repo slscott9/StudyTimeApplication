@@ -71,8 +71,7 @@ class MainActivityViewModel(application: Application, currentMonth: Int, current
     fun getAllSessionsWithMatchingMonth(seletedMonth: Int){
         viewModelScope.launch {
             _allSessionsWithMatchingMonth.value = repository.getAllSessionsWithMatchingMonth(seletedMonth)
-            setSessionWithMonthBarData()
-            
+
         }
     }
 
@@ -110,7 +109,6 @@ class MainActivityViewModel(application: Application, currentMonth: Int, current
         viewModelScope.launch {
             _lastSevenStudySessions.value =
                 repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
-            setLastSevenSessionsBarData()
         }
     }
 

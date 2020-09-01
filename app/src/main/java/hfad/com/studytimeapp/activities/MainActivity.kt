@@ -83,11 +83,11 @@ class MainActivity : FragmentActivity() {
         outState.putBoolean("display", displayWeekFragment)
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        viewmodel.getLastSevenStudySessions(currentMonth, currentDayOfMonth)
-//        viewmodel.getAllSessionsWithMatchingMonth(currentMonth)
-//    }
+    override fun onResume() {
+        super.onResume()
+        viewmodel.getLastSevenStudySessions(currentMonth, currentDayOfMonth)
+        viewmodel.getAllSessionsWithMatchingMonth(currentMonth)
+    }
 }
 
 
