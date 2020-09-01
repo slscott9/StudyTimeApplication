@@ -55,6 +55,8 @@ class SessionMonthSelectorActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.yearsListRecyclerView)
         recyclerView.adapter = adapter
 
+        
+
 
     }
 

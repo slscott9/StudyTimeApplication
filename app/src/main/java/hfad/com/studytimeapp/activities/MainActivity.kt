@@ -2,18 +2,16 @@ package hfad.com.studytimeapp.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import hfad.com.studytimeapp.R
-import hfad.com.studytimeapp.data.Study
 import hfad.com.studytimeapp.databinding.ActivityMainBinding
 import hfad.com.studytimeapp.fragments.MonthViewFragment
 import hfad.com.studytimeapp.fragments.WeekFragment
+import hfad.com.studytimeapp.viewmodelfactories.MainViewModelFactory
 import hfad.com.studytimeapp.viewmodels.MainActivityViewModel
 import java.time.LocalDateTime
 
@@ -35,8 +33,8 @@ class MainActivity : FragmentActivity() {
         currentDayOfMonth = LocalDateTime.now().dayOfMonth
 
 
-
-        viewmodel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        val viewModelFactory = MainViewModelFactory(application, currentMonth, currentDayOfMonth)
+        viewmodel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java) //on init gets list of week and month sessions, sets week data and month data
 
 
 
@@ -85,11 +83,11 @@ class MainActivity : FragmentActivity() {
         outState.putBoolean("display", displayWeekFragment)
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewmodel.setLastSevenStudySessionsData(currentMonth, currentDayOfMonth)
-        viewmodel.setAllSelectedMonthData(currentMonth)
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        viewmodel.getLastSevenStudySessions(currentMonth, currentDayOfMonth)
+//        viewmodel.getAllSessionsWithMatchingMonth(currentMonth)
+//    }
 }
 
 

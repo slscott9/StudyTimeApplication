@@ -13,6 +13,6 @@ data class Study(
     val weekDay: String,
     val dayOfMonth: Int,
     val month: Int,
-    val year: Int
+    val year: Int,
 ) {
 }

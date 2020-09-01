@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import hfad.com.studytimeapp.R
 import hfad.com.studytimeapp.data.Study
 import hfad.com.studytimeapp.databinding.ActivityTimerBinding
+import hfad.com.studytimeapp.viewmodelfactories.MainViewModelFactory
 import hfad.com.studytimeapp.viewmodels.MainActivityViewModel
 import kotlinx.android.synthetic.main.activity_timer.*
 import java.lang.String.format
@@ -46,6 +47,7 @@ class TimerActivity : AppCompatActivity() {
     private val currentWeekDay = LocalDateTime.now().dayOfWeek
     private val currentDate = LocalDateTime.now()
     private val currentYear = LocalDateTime.now().year
+    private val numericalDayOfWeek= currentWeekDay.value
 
     private val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
@@ -56,7 +58,10 @@ class TimerActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timer)
         binding.lifecycleOwner = this
 
-        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+
+        val viewModelFactory = MainViewModelFactory(application, currentMonth, currentDayOfMonth)
+
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
 
         binding.startButton.setOnClickListener {
 
@@ -94,7 +99,7 @@ class TimerActivity : AppCompatActivity() {
                     weekDay = currentWeekDay.toString(),
                     month = currentMonth,
                     dayOfMonth = currentDayOfMonth,
-                     year = currentYear
+                     year = currentYear,
                 )
 
                 viewModel.upsertStudySession(studySession)
