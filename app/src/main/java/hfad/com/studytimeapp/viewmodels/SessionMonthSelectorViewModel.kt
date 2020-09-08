@@ -5,19 +5,17 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import hfad.com.studytimeapp.data.StudyDao
 import hfad.com.studytimeapp.data.StudyDatabase
 import hfad.com.studytimeapp.data.StudyRepository
 import kotlinx.coroutines.*
 
-class SessionMonthSelectorViewModel(val currentYear: Int, application: Application) : AndroidViewModel(application) {
+class SessionMonthSelectorViewModel(currentYear: Int, application: Application, studyDao: StudyDao) : AndroidViewModel(application) {
 
     private val viewModelJob = Job()
     private val viewModelScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
 
-
-
-    private val studyDao = StudyDatabase.getDatabase(application, viewModelScope).studyDao()
     private val repository = StudyRepository(studyDao)
 
     private val _yearList = MutableLiveData<List<Int>>()

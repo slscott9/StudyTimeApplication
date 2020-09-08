@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import kotlinx.coroutines.CoroutineScope
 
-@Database(entities = [Study::class], version = 21, exportSchema = false)
+@Database(entities = [Study::class], version = 23, exportSchema = false)
 abstract class StudyDatabase : RoomDatabase() {
 
     abstract fun studyDao(): StudyDao
@@ -17,7 +17,6 @@ abstract class StudyDatabase : RoomDatabase() {
 
         fun getDatabase(
             context: Context,
-            scope: CoroutineScope
         ): StudyDatabase {
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database

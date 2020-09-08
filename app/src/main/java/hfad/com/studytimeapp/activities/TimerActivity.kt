@@ -2,6 +2,7 @@ package hfad.com.studytimeapp.activities
 
 import android.content.DialogInterface
 import android.inputmethodservice.Keyboard
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -16,6 +17,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import hfad.com.studytimeapp.R
 import hfad.com.studytimeapp.data.Study
+import hfad.com.studytimeapp.data.StudyDatabase
 import hfad.com.studytimeapp.databinding.ActivityTimerBinding
 import hfad.com.studytimeapp.viewmodelfactories.MainViewModelFactory
 import hfad.com.studytimeapp.viewmodels.MainActivityViewModel
@@ -51,6 +53,9 @@ class TimerActivity : AppCompatActivity() {
 
     private val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
+    private val isClickable = false
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,13 +63,16 @@ class TimerActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timer)
         binding.lifecycleOwner = this
 
+        val studyDao = StudyDatabase.getDatabase(application).studyDao()
 
-        val viewModelFactory = MainViewModelFactory(application, currentMonth, currentDayOfMonth)
+        val viewModelFactory = MainViewModelFactory(application,studyDao, currentMonth, currentDayOfMonth)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
 
-        binding.startButton.setOnClickListener {
+        binding.startButton.isEnabled = false
 
+
+        binding.startButton.setOnClickListener {
             if (isRunning) {
                 pauseTimer()
             } else {
@@ -76,6 +84,13 @@ class TimerActivity : AppCompatActivity() {
             }
         }
 
+        binding.etTimeInput.setOnClickListener {
+            binding.startButton.isEnabled = true
+        }
+
+
+
+
         //Adding a study session needs to insert into database
         binding.addStudySessionChip.setOnClickListener {
             if(binding.etTimeInput.text.isNullOrEmpty()){
@@ -85,12 +100,6 @@ class TimerActivity : AppCompatActivity() {
                 countdown_timer?.cancel()
                 val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(time_in_milli_seconds)
                 val hoursStudied = (minutesStudied/60.0).toFloat()
-
-//                val currentDayOfMonth = LocalDateTime.now().dayOfMonth
-//                val currentMonth = LocalDateTime.now().monthValue
-//                val currentWeekDay = LocalDateTime.now().dayOfWeek
-//                val currentDate = LocalDateTime.now()
-
 
                  studySession = Study(
                     hours = hoursStudied,
@@ -110,7 +119,6 @@ class TimerActivity : AppCompatActivity() {
             resetTimer()
         }
     }
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

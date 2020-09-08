@@ -8,7 +8,7 @@ import hfad.com.studytimeapp.R
 import kotlinx.android.synthetic.main.month_list_item.view.*
 import kotlinx.android.synthetic.main.year_list_item.view.*
 
-class MonthsWithSessionsAdapter( ) : RecyclerView.Adapter<MonthsWithSessionsAdapter.MonthsWithSessionsViewHolder>() {
+class MonthsWithSessionsAdapter( val listener: (Int) -> Unit) : RecyclerView.Adapter<MonthsWithSessionsAdapter.MonthsWithSessionsViewHolder>() {
 
 
     /*
@@ -38,7 +38,9 @@ class MonthsWithSessionsAdapter( ) : RecyclerView.Adapter<MonthsWithSessionsAdap
     }
 
     override fun onBindViewHolder(holder: MonthsWithSessionsViewHolder, position: Int) {
+        val month = monthsList[position]
         holder.cardView.month_item_text_view.text = months[monthsList[position] - 1]
+        holder.cardView.setOnClickListener { listener(month) }
     }
 
     override fun getItemCount() = monthsList.size

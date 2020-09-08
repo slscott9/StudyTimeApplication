@@ -8,16 +8,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
 import hfad.com.studytimeapp.R
 import hfad.com.studytimeapp.databinding.FragmentWeekBinding
 import hfad.com.studytimeapp.viewmodels.MainActivityViewModel
-import hfad.com.studytimeapp.viewmodels.WeekViewModel
-import java.time.LocalDateTime
 
 /*
     As of right now the Each Fragment calls is setMonth, and setWeek view model functions which query database for each.
@@ -47,10 +41,6 @@ class WeekFragment : Fragment() {
             }
         })
 
-        viewModel.lastSevenStudySessions.observe(viewLifecycleOwner, Observer {
-            viewModel.setLastSevenSessionsBarData()
-        })
-
         return binding.root
     }
 
@@ -64,7 +54,7 @@ class WeekFragment : Fragment() {
 //        //barDataSet.setColors(ColorTemplate.COLORFUL_COLORS)
 //        barDataSet.color = resources.getColor(R.color.colorAccent)
 
-        binding.weekBarChart.animateY(2000)
+        binding.weekBarChart.animateY(1000)
     }
 
 

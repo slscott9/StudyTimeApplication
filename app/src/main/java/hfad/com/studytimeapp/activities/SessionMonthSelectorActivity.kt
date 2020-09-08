@@ -1,5 +1,6 @@
 package hfad.com.studytimeapp.activities
 
+import android.content.Intent
 import android.net.sip.SipSession
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import hfad.com.studytimeapp.R
 import hfad.com.studytimeapp.adapters.MonthsWithSessionsAdapter
 import hfad.com.studytimeapp.adapters.YearsWithStudySessionsAdapter
+import hfad.com.studytimeapp.data.StudyDatabase
 import hfad.com.studytimeapp.viewmodelfactories.SessionMonthSelectorViewModelFactory
 import hfad.com.studytimeapp.viewmodels.SessionMonthSelectorViewModel
 import java.time.LocalDateTime
@@ -24,7 +26,9 @@ class SessionMonthSelectorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_session_month_selector)
 
-        val viewModelFactory = SessionMonthSelectorViewModelFactory(currentYear, application)
+        val studyDao = StudyDatabase.getDatabase(application).studyDao()
+
+        val viewModelFactory = SessionMonthSelectorViewModelFactory(currentYear, application, studyDao)
         viewModel =
             ViewModelProvider(this, viewModelFactory).get(SessionMonthSelectorViewModel::class.java)
 
@@ -34,7 +38,12 @@ class SessionMonthSelectorActivity : AppCompatActivity() {
             viewModel.getMonthsWithSelectedYear(it)
         }//no list in constructor so we can manually set the list when data changes
 
-        val monthAdapter = MonthsWithSessionsAdapter()
+
+        val monthAdapter = MonthsWithSessionsAdapter(){
+            val intent = Intent(this, MonthDetailActivity::class.java)
+            intent.putExtra("month_selected", it)
+            startActivity(intent)
+        }
 
         viewModel.monthsFromSelectedYear.observe(this, Observer {
             it?.let {

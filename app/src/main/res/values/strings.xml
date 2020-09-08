@@ -7,4 +7,6 @@
     <string name="start_timer_button">start</string>
     <string name="week_chip_button_text">week</string>
     <string name="month_chip_button_text">month</string>
+    <string name="enter_study_duration">Enter study duration</string>
+    <string name="_0">0</string>
 </resources>

@@ -3,24 +3,23 @@ package hfad.com.studytimeapp.viewmodels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import hfad.com.studytimeapp.data.Study
-import hfad.com.studytimeapp.data.StudyDatabase
+import hfad.com.studytimeapp.data.StudyDao
 import hfad.com.studytimeapp.data.StudyRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class MainActivityViewModel(application: Application, currentMonth: Int, currentDayOfMonth: Int) : AndroidViewModel(application){
+class MainActivityViewModel(application: Application, private val studyDao: StudyDao, currentMonth: Int, currentDayOfMonth: Int) : AndroidViewModel(application){
 
     private val viewModelJob = Job()
     private val viewModelScope = CoroutineScope(Dispatchers.Main + viewModelJob) //coroutine scope keeps track of coroutines launch coroutines inside of coroutine scopes
 
-    private val studyDao = StudyDatabase.getDatabase(application, viewModelScope).studyDao()
     private val repository = StudyRepository(studyDao)
     private val weekDays = arrayListOf<String>(
         "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday", "Sunday"
@@ -30,116 +29,94 @@ class MainActivityViewModel(application: Application, currentMonth: Int, current
     private val nullLabels = arrayListOf<String>("No Data", "No Data", "No Data", "No Data", "No Data", "No Data", "No Data")
     private val months = arrayListOf<String>("January", "February" ,"March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
 
-
-    private val _weekBarData = MutableLiveData<BarData>()
-    val weekBarData: LiveData<BarData>
-        get() = _weekBarData
-
-
-    private val _monthBarData = MutableLiveData<BarData>()
-    val monthBarData: LiveData<BarData>
-        get() = _monthBarData
-
-
-    private val _allSessionsWithMatchingMonth = MutableLiveData<List<Study>>()
-    var allSessionsWithMatchingMonth: LiveData<List<Study>> = _allSessionsWithMatchingMonth
-    
-    
-    private val _lastSevenStudySessions = MutableLiveData<List<Study>>()
-    var lastSevenStudySessions: LiveData<List<Study>> = _lastSevenStudySessions
-    
-    init {
-        getAllSessionsWithMatchingMonth(currentMonth)
-        getLastSevenStudySessions(currentMonth, currentDayOfMonth)
-        
-    }
-    
-    
     var month: String = ""
+
+    /*
+        When _lastSevenSessionsHours changes get the last sevenStudySessions, use date and hours properties to transform into bar data.
+
+        Activities observe bar data and update bar charts
+     */
+    private val _lastSevenSessionsHours = repository.getLastSevenSessionsHours(currentMonth, currentDayOfMonth)
+    private val lastSevenStudySessions : LiveData<List<Study>> = Transformations.switchMap(_lastSevenSessionsHours){
+        repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
+    }
+    val weekBarData: LiveData<BarData> = Transformations.map(lastSevenStudySessions){
+        setLastSevenSessionsBarData(it)
+    }
+
+    private val _monthsStudySessionHours = repository.getSessionHoursForMonth(currentMonth)
+    private val _monthsStudySessions = Transformations.switchMap(_monthsStudySessionHours){
+        repository.getAllSessionsWithMatchingMonth(currentMonth)
+    }
+    val monthBarData = Transformations.map(_monthsStudySessions){
+        setSessionWithMonthBarData(it)
+    }
+
+    fun setSessionWithMonthBarData(monthsStudySessionList: List<Study>) : BarData{
+
+        val monthBarDataSetValues = MutableList(31) { BarEntry(0F, 0) }
+        var monthBarData = BarData()
+
+        if (monthsStudySessionList.isNullOrEmpty()) {
+            val barDataSet = BarDataSet(monthBarDataSetValues, "Hours")
+            monthBarData = BarData(monthDayLabels, barDataSet)
+
+        } else {
+            //Entries uses the fixed size so we can add values to it at specific indexes
+            //BarEntry(value, index) we can specify the index this bar value will be placed
+
+            for (i in monthsStudySessionList.indices) {
+                monthBarDataSetValues[monthsStudySessionList[i].dayOfMonth - 1] =
+                    BarEntry(
+                        monthsStudySessionList[i].hours,
+                        monthsStudySessionList[i].dayOfMonth - 1
+                    ) //to match the array indexes
+            }
+
+            val monthBarDataSet = BarDataSet(monthBarDataSetValues, "Hours")
+            month =
+                months[monthsStudySessionList[0].month - 1] //set the month value to be displayed in the monthBarChart's description
+
+            monthBarData = BarData(monthDayLabels, monthBarDataSet)
+        }
+
+        return monthBarData
+    }
+
+
+    fun setLastSevenSessionsBarData(list: List<Study>): BarData{
+        val weekBarDataSetValues = ArrayList<BarEntry>()
+        var weekBarData = BarData()
+
+        if (list.isNullOrEmpty()) {
+            val barDataSet = BarDataSet(weekBarDataSetValues, "Sessions")
+            weekBarData = BarData(nullLabels, barDataSet)
+
+        } else {
+            val datesFromSessions = ArrayList<String>()
+
+            for (session in list.indices) {
+                weekBarDataSetValues.add(
+                    BarEntry(
+                        list[session].hours,
+                        session
+                    )
+                )
+                datesFromSessions.add(list[session].date)
+            }
+            val weekBarDataSet = BarDataSet(weekBarDataSetValues, "Hours")
+            weekBarData = BarData(datesFromSessions, weekBarDataSet)
+        }
+
+        return weekBarData
+    }
+
 
     fun upsertStudySession(newStudySession: Study){
         viewModelScope.launch {
             repository.insertStudySession(newStudySession)
         }
     }
-
-    /*
-        Entries must be fixed size in order to set specfic index values. We set its values to emtpy BarEntries.
-        Then loop for the size of the study sessions array we get back from the databas query
-        we get the entry index from the ith study sessions day of month and set its value to the ith sessions hours and set the index as well
-     */
-    fun getAllSessionsWithMatchingMonth(seletedMonth: Int){
-        viewModelScope.launch {
-            _allSessionsWithMatchingMonth.value = repository.getAllSessionsWithMatchingMonth(seletedMonth)
-
-        }
-    }
-
-
-    fun setSessionWithMonthBarData() {
-
-        val monthBarDataSetValues = MutableList(31) { BarEntry(0F, 0) }
-
-        if (_allSessionsWithMatchingMonth.value.isNullOrEmpty()) {
-            val barDataSet = BarDataSet(monthBarDataSetValues, "Hours")
-            _monthBarData.value = BarData(monthDayLabels, barDataSet)
-
-        } else {
-            //Entries uses the fixed size so we can add values to it at specific indexes
-            //BarEntry(value, index) we can specify the index this bar value will be placed
-
-            for (i in 0 until _allSessionsWithMatchingMonth.value!!.size) {
-                monthBarDataSetValues[_allSessionsWithMatchingMonth.value!![i].dayOfMonth - 1] =
-                    BarEntry(
-                        _allSessionsWithMatchingMonth.value!![i].hours,
-                        _allSessionsWithMatchingMonth.value!![i].dayOfMonth - 1
-                    ) //to match the array indexes
-            }
-
-            val monthBarDataSet = BarDataSet(monthBarDataSetValues, "Hours")
-            month =
-                months[_allSessionsWithMatchingMonth.value!![0].month - 1] //set the month value to be displayed in the monthBarChart's description
-
-            _monthBarData.value = BarData(monthDayLabels, monthBarDataSet)
-        }
-    }
-    
-
-    fun getLastSevenStudySessions(currentMonth: Int, currentDayOfMonth: Int){
-        viewModelScope.launch {
-            _lastSevenStudySessions.value =
-                repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
-        }
-    }
-
-
-        fun setLastSevenSessionsBarData() {
-            val weekBarDataSetValues = ArrayList<BarEntry>()
-
-            if (_lastSevenStudySessions.value.isNullOrEmpty()) {
-                val barDataSet = BarDataSet(weekBarDataSetValues, "Sessions")
-                _weekBarData.value = BarData(nullLabels, barDataSet)
-
-            } else {
-                val datesFromSessions = ArrayList<String>()
-
-                for (session in _lastSevenStudySessions.value!!.indices) {
-                    weekBarDataSetValues.add(
-                        BarEntry(
-                            _lastSevenStudySessions.value!![session].hours,
-                            session
-                        )
-                    ) //
-                    datesFromSessions.add(_lastSevenStudySessions.value!![session].date)
-                }
-
-                val weekBarDataSet = BarDataSet(weekBarDataSetValues, "Cells")
-
-                _weekBarData.value = BarData(datesFromSessions, weekBarDataSet)
-            }
-        }
-    
-
 
 
 //    Inserts mock study session from MainActivity - already inserted into database though
@@ -166,16 +143,58 @@ class MainActivityViewModel(application: Application, currentMonth: Int, current
     fun insertAStudySession(){
         viewModelScope.launch {
             val study = Study(
-                hours = 10F,
+                hours = 3F,
                 minutes = 20,
                 date = "2019-09-27",
                 weekDay = "MONDAY",
                 month = 9,
-                year = 2019,
+                year = 2020,
                 dayOfMonth = 27
             )
 
+            val study1 = Study(
+                hours = 14F,
+                minutes = 20,
+                date = "2019-09-2",
+                weekDay = "MONDAY",
+                month = 9,
+                year = 2019,
+                dayOfMonth = 2
+            )
+            val study2 = Study(
+            hours = 17F,
+            minutes = 20,
+            date = "2019-01-7",
+            weekDay = "MONDAY",
+            month = 1,
+            year = 2019,
+            dayOfMonth = 7
+        )
+            val study3 = Study(
+            hours = 10F,
+            minutes = 20,
+            date = "2019-08-27",
+            weekDay = "MONDAY",
+            month = 8,
+            year = 2019,
+            dayOfMonth = 27
+        )
+            val study4 = Study(
+            hours = 10F,
+            minutes = 20,
+            date = "2018-03-7",
+            weekDay = "MONDAY",
+            month = 3,
+            year = 2018,
+            dayOfMonth = 7
+        )
+
+
             repository.insertStudySession(study)
+//            repository.insertStudySession(study1)
+//            repository.insertStudySession(study2)
+//            repository.insertStudySession(study3)
+//            repository.insertStudySession(study4)
         }
     }
 
