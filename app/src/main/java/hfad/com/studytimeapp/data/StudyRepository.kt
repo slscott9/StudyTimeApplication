@@ -4,6 +4,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
+/*
+    If methods return live data Room takes care of coroutines and Dispatchers for us
+
+    If the method does not return live data need to launch from coroutine scope and use dispatchers
+ */
+
 class StudyRepository(private val studyDao: StudyDao) {
 
     //New method to get last seven sessions hours
@@ -22,7 +28,7 @@ class StudyRepository(private val studyDao: StudyDao) {
         return studyDao.getLastSevenSessions(currentMonth, currentDayOfMonth )
     }
 
-     fun getAllSessionsWithMatchingMonth(monthSelected: Int): LiveData<List<Study>>{
+     fun getAllSessionsWithMatchingMonth(monthSelected: Int): LiveData<List<Study>>{ //returns live data so it does not need suspend. Room takes care of coroutines for us
         return studyDao.getAllSessionsWithMatchingMonth(monthSelected)
     }
 

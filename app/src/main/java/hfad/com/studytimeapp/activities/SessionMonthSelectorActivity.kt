@@ -39,7 +39,7 @@ class SessionMonthSelectorActivity : AppCompatActivity() {
         }//no list in constructor so we can manually set the list when data changes
 
 
-        val monthAdapter = MonthsWithSessionsAdapter(){
+        val monthAdapter = MonthsWithSessionsAdapter{
             val intent = Intent(this, MonthDetailActivity::class.java)
             intent.putExtra("month_selected", it)
             startActivity(intent)

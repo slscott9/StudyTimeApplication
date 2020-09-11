@@ -1,8 +1,10 @@
 package hfad.com.studytimeapp.activities
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.marginEnd
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
@@ -70,7 +72,7 @@ class MainActivity :  AppCompatActivity(){
                 displayWeekFragment = false
             }
         }
-        binding.addSessionFAB.setOnClickListener {
+        binding.addSessionChip.setOnClickListener {
             val intent = Intent(this, TimerActivity::class.java)
             startActivity(intent)
         }
@@ -85,6 +87,8 @@ class MainActivity :  AppCompatActivity(){
         super.onSaveInstanceState(outState)
         outState.putBoolean("display", displayWeekFragment)
     }
+
+
 
 
     /*

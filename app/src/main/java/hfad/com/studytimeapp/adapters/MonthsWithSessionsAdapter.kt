@@ -40,7 +40,8 @@ class MonthsWithSessionsAdapter( val listener: (Int) -> Unit) : RecyclerView.Ada
     override fun onBindViewHolder(holder: MonthsWithSessionsViewHolder, position: Int) {
         val month = monthsList[position]
         holder.cardView.month_item_text_view.text = months[monthsList[position] - 1]
-        holder.cardView.setOnClickListener { listener(month) }
+
+        holder.cardView.setOnClickListener { listener(month) } // setOnClickListener is a lambda so we define it by invoking the listener lambda member passing it month as parameter
     }
 
     override fun getItemCount() = monthsList.size
